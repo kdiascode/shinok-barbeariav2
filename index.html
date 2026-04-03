@@ -1,919 +1,183 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shinok Barberia</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --black: #06080f;
-    --dark: #0c0f1a;
-    --card: #101420;
-    --accent: #d42b2b;
-    --accent-light: #e85555;
-    --blue: #1a2a6c;
-    --blue-mid: #1e3a8a;
-    --white: #f5f5f5;
-    --gray: #8a90a0;
-    --border: #1e2640;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Barlow', sans-serif;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 40px;
-    background: linear-gradient(to bottom, rgba(6,8,15,0.98), transparent);
-  }
-  .nav-logo-wrap { display: flex; align-items: center; gap: 12px; }
-  .nav-logo-svg  { width: 48px; height: 48px; filter: drop-shadow(0 0 10px rgba(212,43,43,0.5)) drop-shadow(0 0 20px rgba(26,42,108,0.6)); }
-  .nav-logo-text {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px; letter-spacing: 5px; color: var(--white);
-  }
-  .nav-links { display: flex; gap: 32px; list-style: none; }
-  .nav-links a {
-    color: var(--white); text-decoration: none;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
-    opacity: 0.7; transition: opacity 0.2s, color 0.2s;
-  }
-  .nav-links a:hover { opacity: 1; color: var(--accent); }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex; align-items: center; justify-content: space-between;
-    position: relative; overflow: hidden;
-    padding: 0 6% 0 40px;
-    gap: 40px;
-  }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 50% 70% at 75% 50%, rgba(26,42,108,0.35) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 50% at 10% 80%, rgba(212,43,43,0.12) 0%, transparent 60%),
-      linear-gradient(160deg, #06080f 0%, #0c0f1a 60%, #06080f 100%);
-  }
-  .pole-deco {
-    position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
-    width: 8px; height: 65vh;
-    background: repeating-linear-gradient(
-      180deg,
-      #1a2a6c 0px, #1a2a6c 22px,
-      #d42b2b 22px, #d42b2b 44px,
-      #f5f5f5 44px, #f5f5f5 66px
-    );
-    border-radius: 4px; opacity: 0.45;
-    animation: poleScroll 3s linear infinite;
-    box-shadow: 0 0 20px rgba(212,43,43,0.2);
-  }
-  @keyframes poleScroll {
-    0%   { background-position: 0 0; }
-    100% { background-position: 0 60px; }
-  }
-
-  /* Large prominent logo right side */
-  .hero-logo-wrap {
-    position: relative; z-index: 2;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    width: 420px; height: 420px;
-    animation: floatLogo 7s ease-in-out infinite;
-  }
-  .hero-logo-ring {
-    position: absolute; inset: -20px;
-    border-radius: 50%;
-    border: 1px solid rgba(212,43,43,0.25);
-    box-shadow:
-      0 0 0 10px rgba(26,42,108,0.1),
-      0 0 60px rgba(212,43,43,0.15),
-      inset 0 0 60px rgba(26,42,108,0.1);
-    animation: ringPulse 3s ease-in-out infinite;
-  }
-  @keyframes ringPulse {
-    0%,100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.02); }
-  }
-  .hero-logo-deco {
-    width: 380px; height: 380px;
-    opacity: 0.75; pointer-events: none;
-    filter: drop-shadow(0 0 20px rgba(212,43,43,0.4)) drop-shadow(0 0 50px rgba(26,42,108,0.5));
-  }
-  @keyframes floatLogo {
-    0%,100% { transform: translateY(-50%); }
-    50%     { transform: translateY(calc(-50% - 14px)); }
-  }
-
-  .hero-content { position: relative; z-index: 2; max-width: 680px; }
-  .hero-tag {
-    display: inline-block;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--accent); border: 1px solid var(--accent);
-    padding: 6px 16px; margin-bottom: 24px;
-    opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
-  }
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(80px, 14vw, 160px);
-    line-height: 0.9; letter-spacing: 2px; color: var(--white);
-    opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
-  }
-  .hero-title span { color: var(--accent); display: block; }
-  .hero-sub {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 18px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--gray); margin-top: 16px;
-    opacity: 0; animation: fadeUp 0.7s 0.6s forwards;
-  }
-  .hero-cta {
-    margin-top: 48px;
-    opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
-  }
-  .btn-whatsapp {
-    display: inline-flex; align-items: center; gap: 12px;
-    background: var(--accent); color: var(--white); text-decoration: none;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-    padding: 18px 36px; transition: all 0.3s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  }
-  .btn-whatsapp:hover {
-    background: var(--accent-light);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(212,43,43,0.4);
-  }
-  .btn-whatsapp svg { width: 20px; height: 20px; flex-shrink: 0; }
-
-  .section-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), var(--blue-mid), transparent);
-    opacity: 0.4;
-  }
-
-  /* SOBRE */
-  .sobre {
-    padding: 100px 40px;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 80px; align-items: center;
-    max-width: 1200px; margin: 0 auto;
-  }
-  .sobre-text .label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 16px;
-  }
-  .sobre-text h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 60px; line-height: 1; letter-spacing: 2px; margin-bottom: 24px;
-  }
-  .sobre-text p { color: var(--gray); line-height: 1.8; font-size: 15px; }
-  .social-links { display: flex; gap: 16px; margin-top: 28px; }
-  .social-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    color: var(--accent); text-decoration: none;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
-    border: 1px solid rgba(212,43,43,0.3);
-    padding: 8px 16px; transition: all 0.3s;
-  }
-  .social-link:hover { background: rgba(212,43,43,0.1); border-color: var(--accent); }
-  .sobre-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-  .stat-box {
-    background: var(--card); padding: 32px;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-  }
-  .stat-box .num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 56px; color: var(--white); line-height: 1;
-  }
-  .stat-box .desc {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--gray); margin-top: 4px;
-  }
-
-  /* SERVIÇOS */
-  .servicos { padding: 100px 40px; background: var(--dark); }
-  .section-header { text-align: center; margin-bottom: 60px; }
-  .section-header .label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 12px;
-  }
-  .section-header h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px; letter-spacing: 3px;
-  }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2px; max-width: 1200px; margin: 0 auto;
-  }
-  .service-card {
-    background: var(--card); border: 1px solid var(--border);
-    padding: 32px; position: relative; overflow: hidden;
-    transition: all 0.3s; cursor: pointer;
-  }
-  .service-card::before {
-    content: ''; position: absolute;
-    bottom: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--blue-mid));
-    transform: scaleX(0); transition: transform 0.3s;
-  }
-  .service-card:hover { border-color: rgba(26,42,108,0.5); background: #111828; }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-time {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--gray); margin-bottom: 8px;
-  }
-  .service-card h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px; letter-spacing: 1px; margin-bottom: 8px;
-  }
-  .service-desc { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 20px; }
-  .service-price {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px; color: var(--accent); letter-spacing: 1px;
-  }
-  .service-price span {
-    font-size: 16px; color: var(--gray);
-    font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px;
-  }
-
-  /* CTA */
-  .cta-section {
-    padding: 120px 40px; text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .cta-section::before {
-    content: 'SHINOK'; position: absolute;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-family: 'Bebas Neue', sans-serif; font-size: 30vw;
-    color: rgba(255,255,255,0.02); white-space: nowrap;
-    pointer-events: none; letter-spacing: 10px;
-  }
-  .cta-section .label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 16px;
-  }
-  .cta-section h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 8vw, 96px);
-    letter-spacing: 3px; margin-bottom: 16px; line-height: 1;
-  }
-  .cta-section p { color: var(--gray); font-size: 16px; margin-bottom: 48px; }
-
-  /* FOOTER */
-  footer {
-    background: #050710; border-top: 1px solid var(--border);
-    padding: 48px 40px;
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 20px;
-  }
-  .footer-logo-wrap { display: flex; align-items: center; gap: 12px; }
-  .footer-logo-svg  { width: 46px; height: 46px; }
-  .footer-brand-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px; letter-spacing: 6px; color: var(--accent);
-  }
-  .footer-info { text-align: center; }
-  .footer-info p {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray);
-  }
-  .footer-copy {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; color: #444; letter-spacing: 1px;
-  }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s, transform 0.7s; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* WHATSAPP FLOAT */
-  .whatsapp-float {
-    position: fixed; bottom: 28px; right: 28px; z-index: 200;
-    width: 56px; height: 56px; background: #25d366; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
-    transition: transform 0.3s, box-shadow 0.3s; text-decoration: none;
-  }
-  .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(37,211,102,0.5); }
-  .whatsapp-float svg { width: 28px; height: 28px; fill: white; }
-  .whatsapp-float::before {
-    content: ''; position: absolute; inset: -4px;
-    border-radius: 50%; border: 2px solid #25d366;
-    animation: ping 2s ease-out infinite;
-  }
-  @keyframes ping {
-    0%   { opacity: 0.8; transform: scale(1); }
-    100% { opacity: 0;   transform: scale(1.5); }
-  }
-
-  /* HAMBURGER */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    z-index: 201;
-  }
-  .hamburger span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: var(--white);
-    border-radius: 2px;
-    transition: all 0.3s;
-  }
-  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-  /* MOBILE MENU OVERLAY */
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(6,8,15,0.98);
-    z-index: 200;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-  .mobile-menu.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .mobile-menu a {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    letter-spacing: 6px;
-    color: var(--white);
-    text-decoration: none;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-    width: 70%;
-    text-align: center;
-    transition: color 0.2s;
-  }
-  .mobile-menu a:last-child { border-bottom: none; }
-  .mobile-menu a:hover { color: var(--accent); }
-
-  /* SERVICE DRAWER */
-  .drawer-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 300;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .drawer-overlay.open { opacity: 1; }
-  .service-drawer {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--card);
-    border-top: 1px solid var(--border);
-    border-radius: 20px 20px 0 0;
-    padding: 32px 28px 48px;
-    z-index: 301;
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .service-drawer.open { transform: translateY(0); }
-  .drawer-handle {
-    width: 40px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 0 auto 28px;
-  }
-  .drawer-time {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 8px;
-  }
-  .drawer-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px; letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-  .drawer-desc {
-    font-size: 14px; color: var(--gray);
-    line-height: 1.7; margin-bottom: 24px;
-  }
-  .drawer-price {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px; color: var(--accent);
-    margin-bottom: 28px;
-  }
-  .drawer-price span {
-    font-size: 18px; color: var(--gray);
-    font-family: 'Barlow Condensed', sans-serif;
-  }
-  .drawer-btn {
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-    background: var(--accent); color: var(--white); text-decoration: none;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-    padding: 18px 32px; width: 100%;
-    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-    transition: background 0.2s;
-    border: none; cursor: pointer;
-  }
-  .drawer-btn:hover { background: var(--accent-light); }
-
-  /* MOBILE STICKY BAR */
-  .mobile-sticky-bar {
-    display: none;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: #070a14;
-    border-top: 1px solid var(--border);
-    padding: 12px 20px;
-    z-index: 150;
-    gap: 10px;
-  }
-  .sticky-btn {
-    flex: 1;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-    padding: 14px 10px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  .sticky-btn-wpp {
-    background: #25d366;
-    color: #000;
-    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-  }
-  .sticky-btn-wpp svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
-  .sticky-btn-services {
-    background: transparent;
-    color: var(--accent);
-    border: 1px solid rgba(212,43,43,0.4);
-  }
-
-  /* SERVICE CARD CLICKABLE */
-  .service-card {
-    cursor: pointer;
-  }
-  .service-card .card-hint {
-    display: none;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    color: rgba(212,43,43,0.5);
-    margin-top: 12px;
-  }
-
-  /* MOBILE */
-  @media (max-width: 768px) {
-    nav { padding: 14px 20px; }
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-    .mobile-menu { display: flex; }
-    .hero { padding: 80px 20px 40px; flex-direction: column; justify-content: center; text-align: center; gap: 32px; }
-    .pole-deco { display: none; }
-    .hero-logo-wrap { width: 220px; height: 220px; order: -1; }
-    .hero-logo-deco { width: 200px; height: 200px; }
-    .hero-logo-ring { display: none; }
-    .hero-content { max-width: 100%; }
-    .sobre { grid-template-columns: 1fr; gap: 40px; padding: 60px 20px; }
-    .sobre-text h2 { font-size: 48px; }
-    .servicos { padding: 60px 20px 100px; }
-    .section-header h2 { font-size: 52px; }
-    .cta-section { padding: 80px 20px 120px; }
-    footer { padding: 32px 20px 100px; flex-direction: column; text-align: center; }
-    .mobile-sticky-bar { display: flex; }
-    .service-card .card-hint { display: block; }
-    .whatsapp-float { display: none; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shinok Barbearia - Estilo e Tradição em Belo Horizonte. Cortes, barboterapia e cuidados masculinos premium.">
+    <title>Shinok Barbearia - Belo Horizonte | Corte e Barba</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&family=Barlow:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
-<!-- ═══════════════════════════════════════════════
-     LOGO SVG — vetorial, reutilizável como <symbol>
-     ═══════════════════════════════════════════════ -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-  <symbol id="logo-shinok" viewBox="0 0 200 200">
-    <!-- Outer circle -->
-    <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" stroke-width="2.8"/>
-    <!-- Inner circle -->
-    <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" stroke-width="1"/>
+    <!-- Noise Overlay -->
+    <div class="noise-overlay" aria-hidden="true"></div>
 
-    <!-- Curved top text: BARBEARIA -->
-    <path id="top-arc" d="M 26,100 A 74,74 0 0,1 174,100" fill="none"/>
-    <text font-family="'Barlow Condensed',Arial,sans-serif" font-size="12.5"
-          font-weight="700" letter-spacing="5.5" fill="currentColor" text-anchor="middle">
-      <textPath href="#top-arc" startOffset="50%">BARBEARIA</textPath>
-    </text>
+    <!-- Header -->
+    <header class="header">
+        <div class="container navbar">
+            <a href="#home" class="logo" aria-label="Shinok Barbearia - Início">
+                <svg class="logo-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="20" cy="20" r="18" fill="none" stroke="#d42b2b" stroke-width="2"/>
+                    <text x="20" y="26" font-family="'Bebas Neue', sans-serif" font-size="22" fill="#f5f5f5" text-anchor="middle" letter-spacing="1">S</text>
+                </svg>
+                <span class="logo-text">SHINOK</span>
+            </a>
+            <button class="hamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-menu">
+                <span></span><span></span><span></span>
+            </button>
+            <nav id="nav-menu" class="nav-menu" aria-hidden="true">
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#servicos">Serviços</a></li>
+                    <li><a href="#unidades">Unidades</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <!-- Decorative thin rule below top text -->
-    <line x1="46" y1="44" x2="154" y2="44" stroke="currentColor" stroke-width="0.8" opacity="0.45"/>
+    <main id="main-content">
+        <!-- Hero -->
+        <section id="home" class="hero">
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <span class="hero-tag fade-up">ESTILO URBANO & PREMIUM</span>
+                    <h1 class="fade-up delay-1">Corte e Barba<br>de Alto Nível</h1>
+                    <p class="fade-up delay-2">A experiência que você merece em Belo Horizonte. Agende agora e saia renovado.</p>
+                    <div class="hero-buttons fade-up delay-3">
+                        <a href="https://wa.me/5531973113975" class="btn btn-primary">Agendar pelo WhatsApp</a>
+                        <a href="#servicos" class="btn btn-outline">Ver Serviços</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="barber-pole" aria-hidden="true"></div>
+                    <div class="hero-logo-wrapper">
+                        <div class="pulse-ring" aria-hidden="true"></div>
+                        <svg class="float-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#d42b2b" stroke-width="4"/>
+                            <text x="50" y="65" font-family="'Bebas Neue', sans-serif" font-size="60" fill="#f5f5f5" text-anchor="middle" letter-spacing="2">S</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Main "Shinok" lettering — script italic serif -->
-    <text x="100" y="115"
-          font-family="Georgia,'Times New Roman',serif"
-          font-size="50" font-weight="900" font-style="italic"
-          fill="currentColor" text-anchor="middle" dominant-baseline="middle"
-          letter-spacing="-1">Shinok</text>
+        <!-- Sobre -->
+        <section id="sobre" class="sobre reveal">
+            <div class="container sobre-grid">
+                <div class="sobre-text">
+                    <h2>Sobre a Shinok</h2>
+                    <p>Mais do que uma barbearia, somos um espaço de estilo e tradição em BH. Profissionais experientes, ambiente premium e foco total no seu bem-estar.</p>
+                    <a href="https://instagram.com/shinok.barbearia" target="_blank" rel="noopener noreferrer" class="ig-link">@shinok.barbearia</a>
+                </div>
+                <div class="sobre-stats">
+                    <div class="stat-item"><span class="stat-number">15k+</span><span class="stat-label">Clientes</span></div>
+                    <div class="stat-item"><span class="stat-number">11</span><span class="stat-label">Anos</span></div>
+                    <div class="stat-item"><span class="stat-number">5.0★</span><span class="stat-label">Google Reviews</span></div>
+                    <div class="stat-item"><span class="stat-number">12+</span><span class="stat-label">Serviços</span></div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Mustache icon -->
-    <g transform="translate(100,149)" fill="currentColor">
-      <!-- Left wing -->
-      <path d="M-1,0 C-5,-3 -12,-2 -18,2 C-23,5 -27,4 -29,1.5
-               C-25,6.5 -18,8.5 -11,6 C-7,4.5 -3,2 -1,0Z"/>
-      <!-- Right wing -->
-      <path d="M1,0 C5,-3 12,-2 18,2 C23,5 27,4 29,1.5
-               C25,6.5 18,8.5 11,6 C7,4.5 3,2 1,0Z"/>
-      <!-- Centre bridge -->
-      <ellipse cx="0" cy="1.2" rx="2.8" ry="2"/>
-      <!-- Smile curve -->
-      <path d="M-5,3.5 C-2,7.5 2,7.5 5,3.5"
-            fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-    </g>
-  </symbol>
-</svg>
+        <!-- Serviços -->
+        <section id="servicos" class="servicos reveal">
+            <div class="container">
+                <h2 class="section-title">Nossos Serviços</h2>
+                <div class="servicos-grid">
+                    <div class="servico-card" data-name="Corte de Cabelo" data-time="45 min" data-price="R$ 45,00" data-desc="Cortes modernos e clássicos, realizados por profissionais especializados para realçar seu estilo. Inclui lavagem e finalização."><h3>Corte de Cabelo</h3><span class="servico-time">45 min</span><p class="servico-desc-brief">Moderno e personalizado</p><span class="servico-price">R$ 45,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Barba Completa" data-time="30 min" data-price="R$ 35,00" data-desc="Barboterapia completa com toalha quente, navalha e produtos premium para cuidar da sua barba."><h3>Barba Completa</h3><span class="servico-time">30 min</span><p class="servico-desc-brief">Navalha e toalha quente</p><span class="servico-price">R$ 35,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Combo Completo" data-time="75 min" data-price="R$ 70,00" data-desc="Cabelo + barba + acabamento. O pacote completo para você sair renovado."><h3>Combo Completo</h3><span class="servico-time">75 min</span><p class="servico-desc-brief">Cabelo + Barba + Acabamento</p><span class="servico-price">R$ 70,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Corte Infantil" data-time="40 min" data-price="R$ 38,00" data-desc="Atendimento especial e paciente para os pequenos ficarem estilosos e confortáveis."><h3>Corte Infantil</h3><span class="servico-time">40 min</span><p class="servico-desc-brief">Atendimento especial</p><span class="servico-price">R$ 38,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Pezinho e Acabamento" data-time="20 min" data-price="R$ 20,00" data-desc="Acabamento perfeito com navalha para deixar seu corte impecável."><h3>Pezinho e Acabamento</h3><span class="servico-time">20 min</span><p class="servico-desc-brief">Detalhe com navalha</p><span class="servico-price">R$ 20,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Tratamento Capilar" data-time="50 min" data-price="R$ 60,00" data-desc="Hidratação, reconstrução e outros tratamentos para manter seus cabelos saudáveis."><h3>Tratamento Capilar</h3><span class="servico-time">50 min</span><p class="servico-desc-brief">Hidratação profunda</p><span class="servico-price">R$ 60,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Pigmentação" data-time="40 min" data-price="R$ 50,00" data-desc="Coloração e pigmentação profissional para cobrir falhas ou mudar o visual."><h3>Pigmentação</h3><span class="servico-time">40 min</span><p class="servico-desc-brief">Coloração profissional</p><span class="servico-price">R$ 50,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Design de Sobrancelha" data-time="15 min" data-price="R$ 25,00" data-desc="Modelagem e limpeza para harmonizar seu olhar e realçar as feições."><h3>Design de Sobrancelha</h3><span class="servico-time">15 min</span><p class="servico-desc-brief">Modelagem precisa</p><span class="servico-price">R$ 25,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Relaxamento" data-time="60 min" data-price="R$ 75,00" data-desc="Alisamento e controle de volume para cabelos cacheados e crespos."><h3>Relaxamento</h3><span class="servico-time">60 min</span><p class="servico-desc-brief">Controle de volume</p><span class="servico-price">R$ 75,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Corte + Barboterapia VIP" data-time="90 min" data-price="R$ 95,00" data-desc="Experiência premium com massagem facial, produtos exclusivos e cerveja cortesia."><h3>Corte + Barboterapia VIP</h3><span class="servico-time">90 min</span><p class="servico-desc-brief">Experiência premium</p><span class="servico-price">R$ 95,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Progressiva Masculina" data-time="120 min" data-price="R$ 120,00" data-desc="Alisamento duradouro e natural para um visual moderno e prático."><h3>Progressiva Masculina</h3><span class="servico-time">120 min</span><p class="servico-desc-brief">Alisamento duradouro</p><span class="servico-price">R$ 120,00</span><span class="tap-hint">Toque para agendar</span></div>
+                    <div class="servico-card" data-name="Selagem Térmica" data-time="80 min" data-price="R$ 100,00" data-desc="Alinhamento dos fios com redução de volume e brilho intenso."><h3>Selagem Térmica</h3><span class="servico-time">80 min</span><p class="servico-desc-brief">Brilho e alinhamento</p><span class="servico-price">R$ 100,00</span><span class="tap-hint">Toque para agendar</span></div>
+                </div>
+            </div>
+        </section>
 
-<!-- ══ NAV ══ -->
-<nav>
-  <div class="nav-logo-wrap">
-    <svg class="nav-logo-svg" viewBox="0 0 200 200" fill="#f5f5f5" aria-label="Shinok logo">
-      <use href="#logo-shinok"/>
-    </svg>
-    <span class="nav-logo-text">Shinok</span>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#servicos">Serviços</a></li>
-    <li><a href="#agendar">Agendar</a></li>
-  </ul>
-  <button class="hamburger" id="hamburger" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+        <!-- Unidades -->
+        <section id="unidades" class="unidades reveal">
+            <div class="container">
+                <h2 class="section-title">Nossas Unidades</h2>
+                <div class="unidades-grid">
+                    <div class="unidade-card">
+                        <h3>Unidade Serrano</h3>
+                        <p>📍 Av. Serrana, 131 - Itatiaia, BH</p>
+                        <p>🕒 Seg-Sex: 9h-19h30 | Sáb: 9h-17h</p>
+                        <a href="https://www.google.com/maps/search/Av.+Serrana,+131+-+Itatiaia,+Belo+Horizonte+-+MG" target="_blank" class="btn btn-outline">Ver no Maps</a>
+                    </div>
+                    <div class="unidade-card">
+                        <h3>Unidade Santa Terezinha</h3>
+                        <p>📍 R. Julita Nogueira Soares, 855 - Santa Terezinha, BH</p>
+                        <p>🕒 Seg-Sex: 9h-19h30 | Sáb: 9h-17h</p>
+                        <a href="https://www.google.com/maps/search/R.+Julita+Nogueira+Soares,+855+-+Santa+Terezinha,+Belo+Horizonte+-+MG" target="_blank" class="btn btn-outline">Ver no Maps</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#sobre" class="mobile-nav-link">Sobre</a>
-  <a href="#servicos" class="mobile-nav-link">Serviços</a>
-  <a href="#agendar" class="mobile-nav-link">Agendar</a>
-</div>
+        <!-- CTA -->
+        <section id="agendamento" class="cta-section reveal">
+            <div class="container cta-content">
+                <div class="cta-watermark" aria-hidden="true">SHINOK</div>
+                <h2>Pronto para o novo visual?</h2>
+                <p>Agende agora mesmo pelo WhatsApp e garanta seu horário.</p>
+                <a href="https://wa.me/5531973113975" class="btn btn-primary btn-large">Agendar pelo WhatsApp</a>
+            </div>
+        </section>
 
-<!-- ══ HERO ══ -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="pole-deco"></div>
+        <!-- Contato/Footer -->
+        <footer id="contato" class="footer">
+            <div class="container footer-grid">
+                <div class="footer-info">
+                    <h2 class="footer-logo">SHINOK <span>BARBEARIA</span></h2>
+                    <p>Estilo e tradição em Belo Horizonte</p>
+                </div>
+                <div class="footer-details">
+                    <p><strong>📍 Endereço:</strong> Santa Terezinha, Belo Horizonte - MG</p>
+                    <p><strong>📞 Telefone:</strong> <a href="https://wa.me/5531973113975">(31) 97311-3975</a></p>
+                    <p><strong>📷 Instagram:</strong> <a href="https://instagram.com/shinok.barbearia" target="_blank">@shinok.barbearia</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 Shinok Barbearia. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+    </main>
 
-  <div class="hero-content">
-    <div class="hero-tag">💈 Barbearia Premium</div>
-    <h1 class="hero-title">
-      SHINOK
-      <span>BARBERIA</span>
-    </h1>
-    <p class="hero-sub">Estilo. Precisão. Identidade.</p>
-    <div class="hero-cta">
-      <a href="https://wa.me/5531973113975?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20horário."
-         class="btn-whatsapp" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        Agendar pelo WhatsApp
-      </a>
+    <!-- Mobile Accessories -->
+    <div class="mobile-sticky-bar" aria-hidden="true">
+        <a href="#servicos" class="btn-sticky">Ver Serviços</a>
+        <a href="https://wa.me/5531973113975" class="btn-sticky primary">Agendar</a>
     </div>
-  </div>
+    <a href="https://wa.me/5531973113975" class="floating-whatsapp" aria-label="Fale conosco no WhatsApp">💬</a>
 
-  <!-- Prominent logo right side -->
-  <div class="hero-logo-wrap">
-    <div class="hero-logo-ring"></div>
-    <svg class="hero-logo-deco" viewBox="0 0 200 200" fill="#f5f5f5" aria-hidden="true">
-      <use href="#logo-shinok"/>
-    </svg>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ══ SOBRE ══ -->
-<section id="sobre" class="sobre">
-  <div class="sobre-text reveal">
-    <p class="label">// Quem somos</p>
-    <h2>MAIS QUE UM CORTE</h2>
-    <p>Na Shinok Barberia, cada detalhe importa. Somos especialistas em corte adulto e infantil, com estrutura diferenciada e entretenimento familiar. Mais de 11 anos transformando visuais no coração de Santa Terezinha, BH.</p>
-    <div class="social-links">
-      <a href="https://www.instagram.com/shinok.barbearia/" target="_blank" rel="noopener" class="social-link">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-        </svg>
-        @shinok.barbearia
-      </a>
+    <!-- Service Drawer -->
+    <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+    <div class="service-drawer" id="service-drawer" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="drawer-handle" aria-hidden="true"></div>
+        <div class="drawer-content">
+            <button class="drawer-close" aria-label="Fechar serviço">✕</button>
+            <h3 id="drawer-title">Serviço</h3>
+            <div class="drawer-meta">
+                <span id="drawer-time">⏱️ --</span>
+                <span id="drawer-price">💰 --</span>
+            </div>
+            <p id="drawer-desc">Descrição do serviço.</p>
+            <a href="#" id="drawer-whatsapp" class="btn btn-primary btn-full">Agendar pelo WhatsApp</a>
+        </div>
     </div>
-  </div>
-  <div class="sobre-stats reveal">
-    <div class="stat-box">
-      <div class="num">15k+</div>
-      <div class="desc">Clientes Atendidos</div>
-    </div>
-    <div class="stat-box">
-      <div class="num">11</div>
-      <div class="desc">Anos no Mercado</div>
-    </div>
-    <div class="stat-box">
-      <div class="num">5.0★</div>
-      <div class="desc">Nota no Google</div>
-    </div>
-    <div class="stat-box">
-      <div class="num">12+</div>
-      <div class="desc">Serviços</div>
-    </div>
-  </div>
-</section>
 
-<div class="section-divider"></div>
-
-<!-- ══ SERVIÇOS ══ -->
-<section id="servicos" class="servicos">
-  <div class="section-header reveal">
-    <p class="label">// O que oferecemos</p>
-    <h2>SERVIÇOS</h2>
-  </div>
-  <div class="services-grid">
-    <div class="service-card reveal" data-service="Corte de Cabelo Adulto" data-time="⏱ 30 min" data-price="R$35" data-desc="Renove seu visual com um corte feito com precisão e estilo. Nossos barbeiros utilizam técnicas modernas para criar o corte ideal para o seu rosto e estilo de vida.">
-      <div class="service-time">⏱ 30 min</div>
-      <h3>Corte de Cabelo Adulto</h3>
-      <p class="service-desc">Renove seu visual com um corte feito com precisão e estilo.</p>
-      <div class="service-price">R$35</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Corte de Cabelo Infantil" data-time="⏱ 30 min" data-price="R$35" data-desc="Transforme o visual dos pequenos com um corte cheio de personalidade. Ambiente acolhedor e adaptado para crianças se sentirem confortáveis.">
-      <div class="service-time">⏱ 30 min</div>
-      <h3>Corte de Cabelo Infantil</h3>
-      <p class="service-desc">Transforme o visual dos pequenos com um corte cheio de personalidade.</p>
-      <div class="service-price">R$35</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Barba" data-time="⏱ 20 min" data-price="R$35" data-desc="Valorize seu visual com um cuidado especial para a barba. Modelagem, acabamento e hidratação para uma barba impecável.">
-      <div class="service-time">⏱ 20 min</div>
-      <h3>Barba</h3>
-      <p class="service-desc">Valorize seu visual com um cuidado especial para a barba.</p>
-      <div class="service-price">R$35</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Cabelo e Barba" data-time="⏱ 50 min" data-price="R$60" data-desc="Transforme seu visual completo com o combo perfeito. Corte de cabelo + barba com o melhor custo-benefício da região.">
-      <div class="service-time">⏱ 50 min</div>
-      <h3>Cabelo e Barba</h3>
-      <p class="service-desc">Transforme seu visual completo com o combo perfeito.</p>
-      <div class="service-price">R$60</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Acabamento (Pezinho)" data-time="⏱ 10 min" data-price="R$15" data-desc="Realce o contorno do seu corte com um acabamento preciso. Ideal para manter o visual entre cortes completos.">
-      <div class="service-time">⏱ 10 min</div>
-      <h3>Acabamento (Pezinho)</h3>
-      <p class="service-desc">Realce o contorno do seu corte com um acabamento preciso.</p>
-      <div class="service-price">R$15</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Pigmentação" data-time="⏱ 15 min" data-price="R$30" data-desc="Recupere a aparência natural dos fios com uma solução moderna. Produto de qualidade para um resultado natural e duradouro.">
-      <div class="service-time">⏱ 15 min</div>
-      <h3>Pigmentação</h3>
-      <p class="service-desc">Recupere a aparência natural dos fios com uma solução moderna.</p>
-      <div class="service-price">R$30</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Relaxamento" data-time="⏱ 20 min" data-price="R$25" data-price-suffix=" a partir de" data-desc="Fios mais alinhados e fáceis de cuidar. Tratamento que reduz o volume e facilita a manutenção do cabelo no dia a dia.">
-      <div class="service-time">⏱ 20 min</div>
-      <h3>Relaxamento</h3>
-      <p class="service-desc">Fios mais alinhados e fáceis de cuidar são possíveis.</p>
-      <div class="service-price">R$25 <span>a partir de</span></div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Platinado" data-time="⏱ 30 min" data-price="R$120" data-price-suffix=" a partir de" data-desc="Transforme seu visual com um cabelo platinado e marcante. Técnica profissional com produtos de alta qualidade para um resultado deslumbrante.">
-      <div class="service-time">⏱ 30 min</div>
-      <h3>Platinado</h3>
-      <p class="service-desc">Transforme seu visual com um cabelo platinado e marcante.</p>
-      <div class="service-price">R$120 <span>a partir de</span></div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Luzes" data-time="⏱ 30 min" data-price="R$70" data-price-suffix=" a partir de" data-desc="Realce seu visual com fios iluminados e cheios de vida. Técnica personalizada para cada tipo e cor de cabelo.">
-      <div class="service-time">⏱ 30 min</div>
-      <h3>Luzes</h3>
-      <p class="service-desc">Realce seu visual com fios iluminados e cheios de vida.</p>
-      <div class="service-price">R$70 <span>a partir de</span></div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Sobrancelha com Navalha" data-time="⏱ 5 min" data-price="R$10" data-desc="Valorize seu olhar com um acabamento preciso e natural. Técnica com navalha para um design limpo e definido.">
-      <div class="service-time">⏱ 5 min</div>
-      <h3>Sobrancelha com Navalha</h3>
-      <p class="service-desc">Valorize seu olhar com um acabamento preciso e natural.</p>
-      <div class="service-price">R$10</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Depilação Ouvido com Cera" data-time="⏱ 5 min" data-price="R$15" data-desc="Cuidado e higiene com resultado impecável. Remoção dos pelos com cera quente para um acabamento limpo e duradouro.">
-      <div class="service-time">⏱ 5 min</div>
-      <h3>Depilação Ouvido com Cera</h3>
-      <p class="service-desc">Cuidado e higiene com resultado impecável.</p>
-      <div class="service-price">R$15</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-    <div class="service-card reveal" data-service="Depilação Nariz com Cera" data-time="⏱ 10 min" data-price="R$15" data-desc="Limpeza precisa para um visual mais refinado. Remoção eficaz e segura dos pelos indesejados com cera especializada.">
-      <div class="service-time">⏱ 10 min</div>
-      <h3>Depilação Nariz com Cera</h3>
-      <p class="service-desc">Limpeza precisa para um visual mais refinado.</p>
-      <div class="service-price">R$15</div>
-      <p class="card-hint">Toque para agendar →</p>
-    </div>
-  </div>
-</section>
-
-<!-- ══ CTA / AGENDAR ══ -->
-<section id="agendar" class="cta-section">
-  <p class="label reveal">// Bora marcar?</p>
-  <h2 class="reveal">AGENDE<br>SEU HORÁRIO</h2>
-  <p class="reveal">Fale direto com a gente pelo WhatsApp. Rápido e fácil.</p>
-  <a href="https://wa.me/5531973113975?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20horário."
-     class="btn-whatsapp reveal" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;flex-shrink:0">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-    Falar no WhatsApp
-  </a>
-</section>
-
-<!-- SERVICE DRAWER -->
-<div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="service-drawer" id="serviceDrawer">
-  <div class="drawer-handle"></div>
-  <div class="drawer-time" id="drawerTime"></div>
-  <div class="drawer-title" id="drawerTitle"></div>
-  <div class="drawer-desc" id="drawerDesc"></div>
-  <div class="drawer-price" id="drawerPrice"></div>
-  <a href="#" class="drawer-btn" id="drawerBtn" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;flex-shrink:0">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-    Agendar este serviço
-  </a>
-</div>
-
-<!-- MOBILE STICKY BAR -->
-<div class="mobile-sticky-bar">
-  <a href="https://wa.me/5531973113975?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20horário."
-     class="sticky-btn sticky-btn-wpp" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    Agendar
-  </a>
-  <a href="#servicos" class="sticky-btn sticky-btn-services">Ver Serviços</a>
-</div>
-
-<!-- footer -->
-<footer>
-  <div class="footer-logo-wrap">
-    <svg class="footer-logo-svg" viewBox="0 0 200 200" fill="var(--accent)" aria-label="Shinok logo">
-      <use href="#logo-shinok"/>
-    </svg>
-    <span class="footer-brand-name">SHINOK</span>
-  </div>
-  <div class="footer-info">
-    <p>Rua Julita Nogueira Soares, 855 — Santa Terezinha, BH</p>
-    <p style="margin-top:4px">+55 31 97311-3975</p>
-  </div>
-  <div class="footer-copy">© 2025 Shinok Barberia ·
-    <a href="https://www.instagram.com/shinok.barbearia/" target="_blank" rel="noopener"
-       style="color:var(--accent);text-decoration:none;">@shinok.barbearia</a>
-  </div>
-</footer>
-
-<!-- WhatsApp float button -->
-<a href="https://wa.me/5531973113975?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20horário."
-   class="whatsapp-float" target="_blank" rel="noopener" title="Falar no WhatsApp">
-  <svg viewBox="0 0 24 24">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-  </svg>
-</a>
-
-<script>
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // Hamburger menu
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('open');
-    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-  });
-  document.querySelectorAll('.mobile-nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    });
-  });
-
-  // Service drawer
-  const overlay = document.getElementById('drawerOverlay');
-  const drawer = document.getElementById('serviceDrawer');
-  const drawerTime = document.getElementById('drawerTime');
-  const drawerTitle = document.getElementById('drawerTitle');
-  const drawerDesc = document.getElementById('drawerDesc');
-  const drawerPrice = document.getElementById('drawerPrice');
-  const drawerBtn = document.getElementById('drawerBtn');
-
-  function openDrawer(card) {
-    const name = card.dataset.service;
-    const time = card.dataset.time;
-    const price = card.dataset.price;
-    const suffix = card.dataset.priceSuffix || '';
-    const desc = card.dataset.desc;
-    drawerTime.textContent = time;
-    drawerTitle.textContent = name;
-    drawerDesc.textContent = desc;
-    drawerPrice.innerHTML = price + (suffix ? `<span>${suffix}</span>` : '');
-    const msg = encodeURIComponent(`Olá! Vim pelo site e gostaria de agendar um horário para: *${name}* (${price}${suffix}). Poderia me informar a disponibilidade?`);
-    drawerBtn.href = `https://wa.me/5531973113975?text=${msg}`;
-    overlay.style.display = 'block';
-    drawer.style.display = 'block';
-    requestAnimationFrame(() => {
-      overlay.classList.add('open');
-      drawer.classList.add('open');
-    });
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeDrawer() {
-    overlay.classList.remove('open');
-    drawer.classList.remove('open');
-    document.body.style.overflow = '';
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      drawer.style.display = 'none';
-    }, 400);
-  }
-
-  overlay.style.display = 'none';
-  drawer.style.display = 'none';
-
-  document.querySelectorAll('.service-card').forEach(card => {
-    card.addEventListener('click', () => openDrawer(card));
-  });
-  overlay.addEventListener('click', closeDrawer);
-
-  // Swipe down to close drawer
-  let touchStartY = 0;
-  drawer.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
-  drawer.addEventListener('touchend', e => {
-    if (e.changedTouches[0].clientY - touchStartY > 80) closeDrawer();
-  }, { passive: true });
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
