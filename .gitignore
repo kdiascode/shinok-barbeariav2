@@ -1,0 +1,64 @@
+--- .gitignore (原始)
+```
+# Dependencies
+node_modules/
+
+# Editor/IDE files
+.vscode/
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Logs
+*.log
+
+# Build artifacts
+dist/
+build/
+*.js.map
+
+# Python artifacts (if any Python files are added later)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# Package managers
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+ehthumbs.db
+Icon?
+```
+
++++ .gitignore (修改后)
+```
+# Dependencies
+node_modules/
+
+# Editors
+.vscode/
+
+# Environment
+.env
+.env.local
+*.env.*
+```
